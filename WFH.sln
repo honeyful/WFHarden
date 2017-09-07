@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WFH", "WFH.csproj", "{A017E174-F3B5-49D4-8F5A-B1350592AA1C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A017E174-F3B5-49D4-8F5A-B1350592AA1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A017E174-F3B5-49D4-8F5A-B1350592AA1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A017E174-F3B5-49D4-8F5A-B1350592AA1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A017E174-F3B5-49D4-8F5A-B1350592AA1C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9D764071-3D04-4BF6-8B8E-4E2E2A774C2A}
+	EndGlobalSection
+EndGlobal
