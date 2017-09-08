@@ -34,6 +34,11 @@
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.btnReset = new System.Windows.Forms.Button();
             this.txtLog = new System.Windows.Forms.TextBox();
+            this.chkExclude = new System.Windows.Forms.CheckBox();
+            this.lvExclude = new System.Windows.Forms.ListView();
+            this.btnFile = new System.Windows.Forms.Button();
+            this.btnDir = new System.Windows.Forms.Button();
+            this.btnRemove = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // chkBlockAllInbound
@@ -95,11 +100,65 @@
             this.txtLog.Size = new System.Drawing.Size(636, 183);
             this.txtLog.TabIndex = 5;
             // 
+            // chkExclude
+            // 
+            this.chkExclude.AutoSize = true;
+            this.chkExclude.Location = new System.Drawing.Point(337, 201);
+            this.chkExclude.Name = "chkExclude";
+            this.chkExclude.Size = new System.Drawing.Size(120, 16);
+            this.chkExclude.TabIndex = 6;
+            this.chkExclude.Text = "Use Exclude List";
+            this.chkExclude.UseVisualStyleBackColor = true;
+            this.chkExclude.CheckedChanged += new System.EventHandler(this.chkExclude_CheckedChanged);
+            // 
+            // lvExclude
+            // 
+            this.lvExclude.Location = new System.Drawing.Point(12, 310);
+            this.lvExclude.Name = "lvExclude";
+            this.lvExclude.Size = new System.Drawing.Size(636, 191);
+            this.lvExclude.TabIndex = 7;
+            this.lvExclude.UseCompatibleStateImageBehavior = false;
+            // 
+            // btnFile
+            // 
+            this.btnFile.Location = new System.Drawing.Point(12, 507);
+            this.btnFile.Name = "btnFile";
+            this.btnFile.Size = new System.Drawing.Size(210, 23);
+            this.btnFile.TabIndex = 8;
+            this.btnFile.Text = "Add File";
+            this.btnFile.UseVisualStyleBackColor = true;
+            this.btnFile.Click += new System.EventHandler(this.btnFile_Click);
+            // 
+            // btnDir
+            // 
+            this.btnDir.Location = new System.Drawing.Point(228, 507);
+            this.btnDir.Name = "btnDir";
+            this.btnDir.Size = new System.Drawing.Size(210, 23);
+            this.btnDir.TabIndex = 9;
+            this.btnDir.Text = "Add Directory";
+            this.btnDir.UseVisualStyleBackColor = true;
+            this.btnDir.Click += new System.EventHandler(this.btnDir_Click);
+            // 
+            // btnRemove
+            // 
+            this.btnRemove.Location = new System.Drawing.Point(444, 507);
+            this.btnRemove.Name = "btnRemove";
+            this.btnRemove.Size = new System.Drawing.Size(204, 23);
+            this.btnRemove.TabIndex = 10;
+            this.btnRemove.Text = "Remove";
+            this.btnRemove.UseVisualStyleBackColor = true;
+            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
+            // 
             // MainFrame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(660, 316);
+            this.ClientSize = new System.Drawing.Size(660, 537);
+            this.Controls.Add(this.btnRemove);
+            this.Controls.Add(this.btnDir);
+            this.Controls.Add(this.btnFile);
+            this.Controls.Add(this.lvExclude);
+            this.Controls.Add(this.chkExclude);
             this.Controls.Add(this.txtLog);
             this.Controls.Add(this.btnReset);
             this.Controls.Add(this.progressBar);
@@ -109,6 +168,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "MainFrame";
             this.Text = "Windows Firewall Harden";
+            this.Load += new System.EventHandler(this.MainFrame_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -122,6 +182,11 @@
         private System.Windows.Forms.ProgressBar progressBar;
         private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.TextBox txtLog;
+        private System.Windows.Forms.CheckBox chkExclude;
+        private System.Windows.Forms.ListView lvExclude;
+        private System.Windows.Forms.Button btnFile;
+        private System.Windows.Forms.Button btnDir;
+        private System.Windows.Forms.Button btnRemove;
     }
 }
 

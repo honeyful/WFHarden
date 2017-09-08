@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
@@ -17,16 +18,49 @@ namespace WFH
             InitializeComponent();
         }
 
+        private void MainFrame_Load(object sender, EventArgs e)
+        {
+            if (chkExclude.Checked)
+                Size = new System.Drawing.Size(676, 576);
+            else
+                Size = new System.Drawing.Size(676, 349);
+
+            lvExclude.FullRowSelect = true;
+            lvExclude.View = View.Details;
+            lvExclude.GridLines = false;
+            lvExclude.Columns.Add("Path", 500);
+            lvExclude.Columns.Add("Type", 100);
+
+        }
+
         private void fwHarden()
         {
             CheckForIllegalCrossThreadCalls = false;
+
+            txtLog.Clear();
+
+            List<string> fileList = new List<string>();
+            List<string> excludeList = new List<string>();
+
             btnReset.Enabled = false;
             btnHarden.Text = "Stop";
 
-            fwReset();
+            txtLog.AppendText("[+] Wait..." + Environment.NewLine);
 
-            List<string> fileList = GetFilesRecursive("C:\\");
-            progressBar.Maximum = fileList.Count;
+            fwReset();
+            fileList = GetFilesRecursive("C:\\");
+
+            if (chkExclude.Checked)
+            {
+                foreach (var Item in lvExclude.Items.Cast<ListViewItem>())
+                {
+                    if (Item.SubItems[1].Text.Equals("File")) excludeList.Add(Item.Text);
+                    else excludeList.AddRange(GetFilesRecursive(Item.Text));
+                }
+                progressBar.Maximum = fileList.Count + excludeList.Count;
+            }
+
+            else progressBar.Maximum = fileList.Count;
 
             foreach (var file in fileList)
             {
@@ -44,13 +78,23 @@ namespace WFH
                 progressBar.Value += 1;
             }
 
+            foreach (var ex in excludeList)
+            {
+                if (_stop) break;
+                removeRule(ex);
+                allowRule(ex);
+                txtLog.AppendText($"[E]{ex}" + Environment.NewLine);
+                progressBar.Value += 1;
+            }
+
             fwInitRule();
 
             btnReset.Enabled = true;
             btnHarden.Text = "Harden";
             progressBar.Value = 0;
+            fileList.Clear();
+            excludeList.Clear();
             MessageBox.Show("Done.");
-            
         }
 
         private void allowRule(string fileName)
@@ -60,7 +104,7 @@ namespace WFH
             fwRule.Action = NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
             fwRule.Enabled = true;
             fwRule.InterfaceTypes = "All";
-            fwRule.Name = fileName;
+            fwRule.Name = fileName.ToLower();
             fwRule.ApplicationName = fileName;
             INetFwPolicy2 fwPolicy = (INetFwPolicy2)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
             fwRule.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT;
@@ -74,11 +118,17 @@ namespace WFH
             fwRule.Action = NET_FW_ACTION_.NET_FW_ACTION_BLOCK;
             fwRule.Enabled = true;
             fwRule.InterfaceTypes = "All";
-            fwRule.Name = fileName;
+            fwRule.Name = fileName.ToLower();
             fwRule.ApplicationName = fileName;
             INetFwPolicy2 fwPolicy = (INetFwPolicy2)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
             fwRule.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT;
             fwPolicy.Rules.Add(fwRule);
+        }
+
+        private void removeRule(string fileName)
+        {
+            INetFwPolicy2 fwPolicy = (INetFwPolicy2)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
+            fwPolicy.Rules.Remove(fileName.ToLower());
         }
 
         private void fwReset()
@@ -180,5 +230,51 @@ namespace WFH
                 _stop = true;
             }
         }
+
+        private void chkExclude_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkExclude.Checked)
+                Size = new System.Drawing.Size(676, 576);
+            else
+                Size = new System.Drawing.Size(676, 349);
+        }
+
+        private void btnFile_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "exe files | (*.exe)";
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    string[] rows = { ofd.FileName, "File" };
+                    ListViewItem lvi = new ListViewItem(rows);
+                    lvExclude.Items.Add(lvi);
+                }
+            }
+        }
+
+        private void btnDir_Click(object sender, EventArgs e)
+        {
+            using (FolderBrowserDialog fbd = new FolderBrowserDialog())
+            {
+                if (fbd.ShowDialog() == DialogResult.OK)
+                {
+                    string[] rows = { fbd.SelectedPath, "Directory" };
+                    ListViewItem lvi = new ListViewItem(rows);
+                    lvExclude.Items.Add(lvi);
+                }
+            }
+        }
+
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+            lvExclude.SelectedItems[0].Remove();
+        }
     }
 }
+
+// TODO
+// 예외 목록 기능 추가
+// 예외 목록의 작동방식
+// 기존 로직 실행 -> 예외 목록에 있는 아이템들을 방화벽 규칙 목록에서 삭제 -> 예외 목록에 있는 아이템들을 새로운 규칙(허용)으로 추가
+// 예외에서 차단, 허용 여부도 도 설정 가능 
