@@ -173,8 +173,24 @@ namespace WFH
             foreach (var ex in excludeList)
             {
                 if (_stop) break;
-                allowRule(ex);
-                txtLog.AppendText($"[E]{ex}" + Environment.NewLine);
+                if (chkVerifySignature.Checked)
+                {
+                    if (checkSignature(ex))
+                    {
+                        allowRule(ex);
+                        txtLog.AppendText($"[E+]{ex}" + Environment.NewLine);
+                    }
+                    else
+                    {
+                        blockRule(ex);
+                        txtLog.AppendText($"[E-]{ex}" + Environment.NewLine);
+                    }
+                }
+                else
+                {
+                    allowRule(ex);
+                    txtLog.AppendText($"[E+]{ex}" + Environment.NewLine);
+                }
                 progressBar.Value += 1;
             }
 

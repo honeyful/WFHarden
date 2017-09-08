@@ -42,6 +42,7 @@
             this.chkWhiteList = new System.Windows.Forms.CheckBox();
             this.txtPath = new System.Windows.Forms.TextBox();
             this.btnAdd = new System.Windows.Forms.Button();
+            this.chkVerifySignature = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // chkBlockAllInbound
@@ -82,7 +83,7 @@
             // 
             this.progressBar.Location = new System.Drawing.Point(12, 223);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(636, 23);
+            this.progressBar.Size = new System.Drawing.Size(445, 23);
             this.progressBar.TabIndex = 3;
             // 
             // btnReset
@@ -180,11 +181,22 @@
             this.btnAdd.UseVisualStyleBackColor = true;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
+            // chkVerifySignature
+            // 
+            this.chkVerifySignature.AutoSize = true;
+            this.chkVerifySignature.Location = new System.Drawing.Point(463, 230);
+            this.chkVerifySignature.Name = "chkVerifySignature";
+            this.chkVerifySignature.Size = new System.Drawing.Size(171, 16);
+            this.chkVerifySignature.TabIndex = 14;
+            this.chkVerifySignature.Text = "Verify Signature White List";
+            this.chkVerifySignature.UseVisualStyleBackColor = true;
+            // 
             // MainFrame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(660, 565);
+            this.Controls.Add(this.chkVerifySignature);
             this.Controls.Add(this.btnAdd);
             this.Controls.Add(this.txtPath);
             this.Controls.Add(this.chkWhiteList);
@@ -225,6 +237,7 @@
         private System.Windows.Forms.CheckBox chkWhiteList;
         private System.Windows.Forms.TextBox txtPath;
         private System.Windows.Forms.Button btnAdd;
+        private System.Windows.Forms.CheckBox chkVerifySignature;
     }
 }
 
