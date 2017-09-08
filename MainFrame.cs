@@ -36,7 +36,7 @@ namespace WFH
                 chkExclude.Checked = true;
 
                 if (chkExclude.Checked)
-                    Size = new System.Drawing.Size(676, 576);
+                    Size = new System.Drawing.Size(676, 604);
                 else
                     Size = new System.Drawing.Size(676, 349);
 
@@ -45,7 +45,7 @@ namespace WFH
             else
             {
                 if (chkExclude.Checked)
-                    Size = new System.Drawing.Size(676, 576);
+                    Size = new System.Drawing.Size(676, 604);
                 else
                     Size = new System.Drawing.Size(676, 349);
             }
@@ -329,7 +329,7 @@ namespace WFH
         private void chkExclude_CheckedChanged(object sender, EventArgs e)
         {
             if (chkExclude.Checked) 
-                Size = new System.Drawing.Size(676, 576);
+                Size = new System.Drawing.Size(676, 604);
             else
                 Size = new System.Drawing.Size(676, 349);
 
@@ -394,6 +394,29 @@ namespace WFH
         private void btnRemove_Click(object sender, EventArgs e)
         {
             lvExclude.SelectedItems[0].Remove();
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            if (File.Exists(txtPath.Text))
+            {
+                string[] rows = { txtPath.Text, "File" };
+                ListViewItem lvi = new ListViewItem(rows);
+                lvExclude.Items.Add(lvi);
+                txtPath.Clear();
+            }
+            else if (Directory.Exists(txtPath.Text))
+            {
+                string[] rows = { txtPath.Text, "Directory" };
+                ListViewItem lvi = new ListViewItem(rows);
+                lvExclude.Items.Add(lvi);
+                txtPath.Clear();
+            }
+            else
+            {
+                MessageBox.Show("Invalid File Or Directory");
+                return;
+            }
         }
     }
 }

@@ -40,6 +40,8 @@
             this.btnDir = new System.Windows.Forms.Button();
             this.btnRemove = new System.Windows.Forms.Button();
             this.chkWhiteList = new System.Windows.Forms.CheckBox();
+            this.txtPath = new System.Windows.Forms.TextBox();
+            this.btnAdd = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // chkBlockAllInbound
@@ -161,11 +163,30 @@
             this.chkWhiteList.UseVisualStyleBackColor = true;
             this.chkWhiteList.CheckedChanged += new System.EventHandler(this.chkWhiteList_CheckedChanged);
             // 
+            // txtPath
+            // 
+            this.txtPath.Location = new System.Drawing.Point(12, 536);
+            this.txtPath.Name = "txtPath";
+            this.txtPath.Size = new System.Drawing.Size(426, 21);
+            this.txtPath.TabIndex = 12;
+            // 
+            // btnAdd
+            // 
+            this.btnAdd.Location = new System.Drawing.Point(444, 534);
+            this.btnAdd.Name = "btnAdd";
+            this.btnAdd.Size = new System.Drawing.Size(204, 23);
+            this.btnAdd.TabIndex = 13;
+            this.btnAdd.Text = "Add Directory Or File";
+            this.btnAdd.UseVisualStyleBackColor = true;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+            // 
             // MainFrame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(660, 537);
+            this.ClientSize = new System.Drawing.Size(660, 565);
+            this.Controls.Add(this.btnAdd);
+            this.Controls.Add(this.txtPath);
             this.Controls.Add(this.chkWhiteList);
             this.Controls.Add(this.btnRemove);
             this.Controls.Add(this.btnDir);
@@ -202,6 +223,8 @@
         private System.Windows.Forms.Button btnDir;
         private System.Windows.Forms.Button btnRemove;
         private System.Windows.Forms.CheckBox chkWhiteList;
+        private System.Windows.Forms.TextBox txtPath;
+        private System.Windows.Forms.Button btnAdd;
     }
 }
 
