@@ -39,6 +39,7 @@
             this.btnFile = new System.Windows.Forms.Button();
             this.btnDir = new System.Windows.Forms.Button();
             this.btnRemove = new System.Windows.Forms.Button();
+            this.chkWhiteList = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // chkBlockAllInbound
@@ -149,11 +150,23 @@
             this.btnRemove.UseVisualStyleBackColor = true;
             this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
             // 
+            // chkWhiteList
+            // 
+            this.chkWhiteList.AutoSize = true;
+            this.chkWhiteList.Location = new System.Drawing.Point(463, 201);
+            this.chkWhiteList.Name = "chkWhiteList";
+            this.chkWhiteList.Size = new System.Drawing.Size(193, 16);
+            this.chkWhiteList.TabIndex = 11;
+            this.chkWhiteList.Text = "Use White List (Only exclude)";
+            this.chkWhiteList.UseVisualStyleBackColor = true;
+            this.chkWhiteList.CheckedChanged += new System.EventHandler(this.chkWhiteList_CheckedChanged);
+            // 
             // MainFrame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(660, 537);
+            this.Controls.Add(this.chkWhiteList);
             this.Controls.Add(this.btnRemove);
             this.Controls.Add(this.btnDir);
             this.Controls.Add(this.btnFile);
@@ -187,6 +200,7 @@
         private System.Windows.Forms.Button btnFile;
         private System.Windows.Forms.Button btnDir;
         private System.Windows.Forms.Button btnRemove;
+        private System.Windows.Forms.CheckBox chkWhiteList;
     }
 }
 

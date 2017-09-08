@@ -16,14 +16,30 @@ namespace WFH
         public MainFrame()
         {
             InitializeComponent();
+            chkWhiteList.Checked = Properties.Settings.Default.UseWhiteList;
+            chkExclude.Checked = Properties.Settings.Default.UseExcludeList;
         }
 
         private void MainFrame_Load(object sender, EventArgs e)
         {
-            if (chkExclude.Checked)
-                Size = new System.Drawing.Size(676, 576);
+            if (chkWhiteList.Checked)
+            {
+                chkExclude.Checked = true;
+
+                if (chkExclude.Checked)
+                    Size = new System.Drawing.Size(676, 576);
+                else
+                    Size = new System.Drawing.Size(676, 349);
+
+                chkExclude.Enabled = false;
+            }
             else
-                Size = new System.Drawing.Size(676, 349);
+            {
+                if (chkExclude.Checked)
+                    Size = new System.Drawing.Size(676, 576);
+                else
+                    Size = new System.Drawing.Size(676, 349);
+            }
 
             lvExclude.FullRowSelect = true;
             lvExclude.View = View.Details;
@@ -50,7 +66,7 @@ namespace WFH
             fwReset();
             fileList = GetFilesRecursive("C:\\");
 
-            if (chkExclude.Checked)
+            if (chkExclude.Checked && lvExclude.Items.Count > 0)
             {
                 foreach (var Item in lvExclude.Items.Cast<ListViewItem>())
                 {
@@ -93,6 +109,52 @@ namespace WFH
             btnHarden.Text = "Harden";
             progressBar.Value = 0;
             fileList.Clear();
+            excludeList.Clear();
+            MessageBox.Show("Done.");
+        }
+
+        private void fwWhiteList()
+        {
+            CheckForIllegalCrossThreadCalls = false;
+
+            if(lvExclude.Items.Count <= 0)
+            {
+                MessageBox.Show("Error! Exclude list is empty!");
+                return;
+            }
+
+            txtLog.Clear();
+
+            btnReset.Enabled = false;
+            btnHarden.Text = "Stop";
+
+            txtLog.AppendText("[+]Wait..." + Environment.NewLine);
+
+            List<string> excludeList = new List<string>();
+
+            foreach (var Item in lvExclude.Items.Cast<ListViewItem>())
+            {
+                if (Item.SubItems[1].Text.Equals("File")) excludeList.Add(Item.Text);
+                else excludeList.AddRange(GetFilesRecursive(Item.Text));
+            }
+
+            progressBar.Maximum = excludeList.Count;
+
+            fwReset();
+
+            foreach (var ex in excludeList)
+            {
+                if (_stop) break;
+                allowRule(ex);
+                txtLog.AppendText($"[E]{ex}" + Environment.NewLine);
+                progressBar.Value += 1;
+            }
+
+            fwInitRule();
+
+            btnReset.Enabled = true;
+            btnHarden.Text = "Harden";
+            progressBar.Value = 0;
             excludeList.Clear();
             MessageBox.Show("Done.");
         }
@@ -220,23 +282,69 @@ namespace WFH
 
         private void btnHarden_Click(object sender, EventArgs e)
         {
-            if(btnHarden.Text == "Harden")
+            if (!chkWhiteList.Checked)
             {
-                _stop = false;
-                new Thread(fwHarden).Start();
+                if (btnHarden.Text == "Harden")
+                {
+                    _stop = false;
+                    new Thread(fwHarden).Start();
+                }
+                else
+                {
+                    _stop = true;
+                }
             }
             else
             {
-                _stop = true;
+                if (btnHarden.Text == "Harden")
+                {
+                    _stop = false;
+                    new Thread(fwWhiteList).Start();
+                }
+                else
+                {
+                    _stop = true;
+                }
             }
         }
 
         private void chkExclude_CheckedChanged(object sender, EventArgs e)
         {
-            if (chkExclude.Checked)
+            if (chkExclude.Checked) 
                 Size = new System.Drawing.Size(676, 576);
             else
                 Size = new System.Drawing.Size(676, 349);
+
+            Properties.Settings.Default.UseExcludeList = chkExclude.Checked;
+            Properties.Settings.Default.Save();
+        }
+
+        private void chkWhiteList_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkWhiteList.Checked)
+            {
+                chkBlockAllInbound.Checked = true;
+                chkBlockOutbound.Checked = true;
+                chkExclude.Checked = true;
+
+                chkBlockAllInbound.Enabled = false;
+                chkBlockOutbound.Enabled = false;
+                chkExclude.Enabled = false;
+            }
+            else
+            {
+
+                chkBlockAllInbound.Checked = true;
+                chkBlockOutbound.Checked = true;
+                chkExclude.Checked = true;
+
+                chkBlockAllInbound.Enabled = true;
+                chkBlockOutbound.Enabled = true;
+                chkExclude.Enabled = true;
+            }
+
+            Properties.Settings.Default.UseWhiteList = chkWhiteList.Checked;
+            Properties.Settings.Default.Save();
         }
 
         private void btnFile_Click(object sender, EventArgs e)
@@ -270,11 +378,11 @@ namespace WFH
         {
             lvExclude.SelectedItems[0].Remove();
         }
+
+
     }
 }
 
 // TODO
-// 예외 목록 기능 추가
-// 예외 목록의 작동방식
-// 기존 로직 실행 -> 예외 목록에 있는 아이템들을 방화벽 규칙 목록에서 삭제 -> 예외 목록에 있는 아이템들을 새로운 규칙(허용)으로 추가
-// 예외에서 차단, 허용 여부도 도 설정 가능 
+// 코드리팩토링
+// 예외 목록 저장
