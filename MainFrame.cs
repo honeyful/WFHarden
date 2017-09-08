@@ -6,6 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 using System.Threading;
 using NetFwTypeLib;
+using System.Collections.Specialized;
 
 namespace WFH
 {
@@ -22,6 +23,14 @@ namespace WFH
 
         private void MainFrame_Load(object sender, EventArgs e)
         {
+            if (Properties.Settings.Default.ExcludeList == null)
+            {
+                Properties.Settings.Default.ExcludeList = new StringCollection();
+            }
+
+            lvExclude.Items.AddRange((from i in Properties.Settings.Default.ExcludeList.Cast<string>()
+                                           select new ListViewItem(i.Split('|'))).ToArray());
+
             if (chkWhiteList.Checked)
             {
                 chkExclude.Checked = true;
@@ -47,6 +56,15 @@ namespace WFH
             lvExclude.Columns.Add("Path", 500);
             lvExclude.Columns.Add("Type", 100);
 
+        }
+
+        private void MainFrame_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Properties.Settings.Default.ExcludeList = new StringCollection();
+            Properties.Settings.Default.ExcludeList.AddRange((from i in lvExclude.Items.Cast<ListViewItem>()
+                                                             select string.Join("|", from si in i.SubItems.Cast<ListViewItem.ListViewSubItem>()
+                                                                                     select si.Text)).ToArray());
+            Properties.Settings.Default.Save();
         }
 
         private void fwHarden()
@@ -351,7 +369,6 @@ namespace WFH
         {
             using (OpenFileDialog ofd = new OpenFileDialog())
             {
-                ofd.Filter = "exe files | (*.exe)";
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
                     string[] rows = { ofd.FileName, "File" };
@@ -378,11 +395,8 @@ namespace WFH
         {
             lvExclude.SelectedItems[0].Remove();
         }
-
-
     }
 }
 
 // TODO
 // 코드리팩토링
-// 예외 목록 저장

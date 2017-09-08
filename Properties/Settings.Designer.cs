@@ -46,5 +46,16 @@ namespace WFH.Properties {
                 this["UseWhiteList"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection ExcludeList {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["ExcludeList"]));
+            }
+            set {
+                this["ExcludeList"] = value;
+            }
+        }
     }
 }

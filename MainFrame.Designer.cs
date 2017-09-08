@@ -181,6 +181,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "MainFrame";
             this.Text = "Windows Firewall Harden";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFrame_FormClosing);
             this.Load += new System.EventHandler(this.MainFrame_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
