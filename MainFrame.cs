@@ -23,13 +23,7 @@ namespace WFH
 
         private void MainFrame_Load(object sender, EventArgs e)
         {
-            if (Properties.Settings.Default.ExcludeList == null)
-            {
-                Properties.Settings.Default.ExcludeList = new StringCollection();
-            }
-
-            lvExclude.Items.AddRange((from i in Properties.Settings.Default.ExcludeList.Cast<string>()
-                                           select new ListViewItem(i.Split('|'))).ToArray());
+            loadSettings();
 
             if (chkWhiteList.Checked)
             {
@@ -60,10 +54,26 @@ namespace WFH
 
         private void MainFrame_FormClosing(object sender, FormClosingEventArgs e)
         {
+            saveSettings();
+        }
+
+        private void loadSettings()
+        {
+            if (Properties.Settings.Default.ExcludeList == null)
+            {
+                Properties.Settings.Default.ExcludeList = new StringCollection();
+            }
+
+            lvExclude.Items.AddRange((from i in Properties.Settings.Default.ExcludeList.Cast<string>()
+                                      select new ListViewItem(i.Split('|'))).ToArray());
+
+        }
+        private void saveSettings()
+        {
             Properties.Settings.Default.ExcludeList = new StringCollection();
             Properties.Settings.Default.ExcludeList.AddRange((from i in lvExclude.Items.Cast<ListViewItem>()
-                                                             select string.Join("|", from si in i.SubItems.Cast<ListViewItem.ListViewSubItem>()
-                                                                                     select si.Text)).ToArray());
+                                                              select string.Join("|", from si in i.SubItems.Cast<ListViewItem.ListViewSubItem>()
+                                                                                      select si.Text)).ToArray());
             Properties.Settings.Default.Save();
         }
 
@@ -374,6 +384,7 @@ namespace WFH
                     string[] rows = { ofd.FileName, "File" };
                     ListViewItem lvi = new ListViewItem(rows);
                     lvExclude.Items.Add(lvi);
+                    saveSettings();
                 }
             }
         }
@@ -387,6 +398,7 @@ namespace WFH
                     string[] rows = { fbd.SelectedPath, "Directory" };
                     ListViewItem lvi = new ListViewItem(rows);
                     lvExclude.Items.Add(lvi);
+                    saveSettings();
                 }
             }
         }
@@ -394,6 +406,7 @@ namespace WFH
         private void btnRemove_Click(object sender, EventArgs e)
         {
             lvExclude.SelectedItems[0].Remove();
+            saveSettings();
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
@@ -404,6 +417,7 @@ namespace WFH
                 ListViewItem lvi = new ListViewItem(rows);
                 lvExclude.Items.Add(lvi);
                 txtPath.Clear();
+                saveSettings();
             }
             else if (Directory.Exists(txtPath.Text))
             {
@@ -411,6 +425,7 @@ namespace WFH
                 ListViewItem lvi = new ListViewItem(rows);
                 lvExclude.Items.Add(lvi);
                 txtPath.Clear();
+                saveSettings();
             }
             else
             {
